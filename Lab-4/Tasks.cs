@@ -56,37 +56,42 @@ internal static class Tasks
     public static void RunTask1()
     {
         Console.WriteLine("\nЗадание 1: Симметрическая разность списков");
-        
+    
         List<int> L1 = ReadIntList("L1");
         List<int> L2 = ReadIntList("L2");
-        
+    
         PrintList(L1, "L1");
         PrintList(L2, "L2");
-        
+    
         List<int> L = new List<int>();
         int i = 0;
         int num = 0;
-        
+    
+        // Элементы из L1, которых нет в L2
         for (i = 0; i < L1.Count; i++)
         {
             num = L1[i];
-            if (!ContainsInt(L2, num))
+            // ✅ ПРОВЕРКА: нет в L2 И нет уже в L
+            if (!ContainsInt(L2, num) && !ContainsInt(L, num))
             {
                 L.Add(num);
             }
         }
-        
+    
+        // Элементы из L2, которых нет в L1
         for (i = 0; i < L2.Count; i++)
         {
             num = L2[i];
-            if (!ContainsInt(L1, num))
+            // ✅ ПРОВЕРКА: нет в L1 И нет уже в L
+            if (!ContainsInt(L1, num) && !ContainsInt(L, num))
             {
                 L.Add(num);
             }
         }
-        
+    
         PrintList(L, "Результат L");
     }
+    
 
     // ==========================================
     // ЗАДАНИЕ 2: LinkedList — удалить между min и max
