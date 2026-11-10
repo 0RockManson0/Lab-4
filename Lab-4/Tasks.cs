@@ -407,7 +407,33 @@ internal static class Tasks
     // ==========================================
     // ЗАДАНИЕ 4: HashSet — цифры в тексте
     // ==========================================
-    private static void FillTextFile(string path)
+    private static int ChooseMode()
+    {
+        int mode = 0;
+        bool isValid = false;
+        
+        while (!isValid)
+        {
+            Console.WriteLine("\nВыберите режим:");
+            Console.WriteLine("1 - Случайная генерация");
+            Console.WriteLine("2 - Ручной ввод");
+            mode = ConsoleHelper.ReadInt("Ваш выбор: ");
+            
+            if (mode == 1 || mode == 2)
+            {
+                isValid = true;
+            }
+            else
+            {
+                Console.WriteLine(
+                    "Некорректный ввод. " +
+                    "Введите 1 или 2.");
+            }
+        }
+        return mode;
+    }
+
+    private static void FillTextFileRandom(string path)
     {
         string[] sampleTexts = {
             "В 2024 году было 365 дней.",
@@ -437,19 +463,32 @@ internal static class Tasks
         }
     }
 
-    public static void RunTask4()
+    private static void FillTextFileManual(string path)
     {
-        Console.WriteLine(
-            "\nЗадание 4: HashSet — " +
-            "цифры в тексте");
+        int lineCount = ConsoleHelper.ReadPositiveInt(
+            "Количество строк текста: ");
         
-        string path = "text4.txt";
-        string fullPath = Path.GetFullPath(path);
-        Console.WriteLine($"Полный путь: {fullPath}");
+        StreamWriter writer = new StreamWriter(path);
+        int i = 0;
+        string line = "";
         
-        FillTextFile(path);
-        Console.WriteLine("Файл заполнен.");
-        
+        try
+        {
+            for (i = 0; i < lineCount; i++)
+            {
+                line = ConsoleHelper.ReadString(
+                    $"Строка {i + 1}: ");
+                writer.WriteLine(line);
+            }
+        }
+        finally
+        {
+            writer.Close();
+        }
+    }
+
+    private static void PrintFileContent(string path)
+    {
         Console.WriteLine("\nСодержимое файла:");
         StreamReader reader = new StreamReader(path);
         string line = "";
@@ -464,11 +503,43 @@ internal static class Tasks
         {
             reader.Close();
         }
+    }
+
+    public static void RunTask4()
+    {
+        Console.WriteLine(
+            "\nЗадание 4: HashSet — " +
+            "цифры в тексте");
         
+        string path = "text4.txt";
+        string fullPath = Path.GetFullPath(path);
+        Console.WriteLine($"Полный путь: {fullPath}");
+        
+        // Выбор режима
+        int mode = ChooseMode();
+        
+        if (mode == 1)
+        {
+            FillTextFileRandom(path);
+            Console.WriteLine(
+                "Файл заполнен случайными данными.");
+        }
+        else
+        {
+            FillTextFileManual(path);
+            Console.WriteLine(
+                "Файл заполнен вручную.");
+        }
+        
+        // Вывод содержимого
+        PrintFileContent(path);
+        
+        // Поиск цифр
         HashSet<char> digits = new HashSet<char>();
         int i = 0;
+        string line = "";
         
-        reader = new StreamReader(path);
+        StreamReader reader = new StreamReader(path);
         try
         {
             while ((line = reader.ReadLine()) != null)
@@ -502,7 +573,6 @@ internal static class Tasks
             Console.WriteLine();
         }
     }
-
     // ==========================================
     // ЗАДАНИЕ 5: Dictionary — самый старший
     // ==========================================
