@@ -67,6 +67,29 @@ internal static class ConsoleHelper
         return result;
     }
 
+    public static uint ReadUIntInRange(
+        string prompt, uint min, uint max)
+    {
+        uint result = 0;
+        bool isValid = false;
+        
+        while (!isValid)
+        {
+            result = ReadUInt(prompt);
+            if (result >= min && result <= max)
+            {
+                isValid = true;
+            }
+            else
+            {
+                Console.WriteLine(
+                    $"Число должно быть " +
+                    $"от {min} до {max}.");
+            }
+        }
+        return result;
+    }
+
     public static string ReadString(string prompt)
     {
         string result = "";

@@ -15,17 +15,20 @@ internal static class Tasks
         int num = 0;
         
         Console.WriteLine($"\nВвод списка {name}:");
-        count = ConsoleHelper.ReadInt("Количество элементов: ");
+        count = ConsoleHelper.ReadPositiveInt(
+            "Количество элементов: ");
         
         for (i = 0; i < count; i++)
         {
-            num = ConsoleHelper.ReadInt($"Элемент {i + 1}: ");
+            num = ConsoleHelper.ReadInt(
+                $"Элемент {i + 1}: ");
             list.Add(num);
         }
         return list;
     }
 
-    private static void PrintList(List<int> list, string title)
+    private static void PrintList(
+        List<int> list, string title)
     {
         int i = 0;
         Console.Write($"\n{title}: [");
@@ -40,7 +43,8 @@ internal static class Tasks
         Console.WriteLine("]");
     }
 
-    private static bool ContainsInt(List<int> list, int value)
+    private static bool ContainsInt(
+        List<int> list, int value)
     {
         int i = 0;
         for (i = 0; i < list.Count; i++)
@@ -55,60 +59,68 @@ internal static class Tasks
 
     public static void RunTask1()
     {
-        Console.WriteLine("\nЗадание 1: Симметрическая разность списков");
-    
+        Console.WriteLine(
+            "\nЗадание 1: " +
+            "Симметрическая разность списков");
+        
         List<int> L1 = ReadIntList("L1");
         List<int> L2 = ReadIntList("L2");
-    
+        
         PrintList(L1, "L1");
         PrintList(L2, "L2");
-    
+        
         List<int> L = new List<int>();
         int i = 0;
         int num = 0;
-    
+        
         // Элементы из L1, которых нет в L2
         for (i = 0; i < L1.Count; i++)
         {
             num = L1[i];
-            // ✅ ПРОВЕРКА: нет в L2 И нет уже в L
-            if (!ContainsInt(L2, num) && !ContainsInt(L, num))
+            if (!ContainsInt(L2, num) && 
+                !ContainsInt(L, num))
             {
                 L.Add(num);
             }
         }
-    
+        
         // Элементы из L2, которых нет в L1
         for (i = 0; i < L2.Count; i++)
         {
             num = L2[i];
-            // ✅ ПРОВЕРКА: нет в L1 И нет уже в L
-            if (!ContainsInt(L1, num) && !ContainsInt(L, num))
+            if (!ContainsInt(L1, num) && 
+                !ContainsInt(L, num))
             {
                 L.Add(num);
             }
         }
-    
+        
         PrintList(L, "Результат L");
     }
-    
 
     // ==========================================
     // ЗАДАНИЕ 2: LinkedList — удалить между min и max
     // ==========================================
     public static void RunTask2()
     {
-        Console.WriteLine("\nЗадание 2: LinkedList — удалить между min и max");
+        Console.WriteLine(
+            "\nЗадание 2: LinkedList — " +
+            "удалить между min и max");
         
         LinkedList<int> list = new LinkedList<int>();
         int count = 0;
         int i = 0;
         int num = 0;
         
-        count = ConsoleHelper.ReadInt("Количество элементов: ");
+        // ВАЛИДАЦИЯ: нужно минимум 3 элемента
+        count = ConsoleHelper.ReadIntInRange(
+            "Количество элементов (минимум 3): ", 
+            3, int.MaxValue);
+        
         for (i = 0; i < count; i++)
         {
-            num = ConsoleHelper.ReadInt($"Элемент {i + 1}: ");
+            num = ConsoleHelper.ReadInt(
+                $"Элемент {i + 1}: ");
             list.AddLast(num);
         }
         
@@ -119,12 +131,7 @@ internal static class Tasks
         }
         Console.WriteLine();
         
-        if (list.Count < 3)
-        {
-            Console.WriteLine("Недостаточно элементов для операции.");
-            return;
-        }
-        
+        // Поиск min и max
         LinkedListNode<int> minNode = list.First;
         LinkedListNode<int> maxNode = list.First;
         LinkedListNode<int> current = list.First;
@@ -142,14 +149,19 @@ internal static class Tasks
             current = current.Next;
         }
         
-        Console.WriteLine($"Min: {minNode.Value}, Max: {maxNode.Value}");
+        Console.WriteLine(
+            $"Min: {minNode.Value}, " +
+            $"Max: {maxNode.Value}");
         
         if (minNode == maxNode)
         {
-            Console.WriteLine("Min и Max — один элемент, удалять нечего.");
+            Console.WriteLine(
+                "Min и Max — один элемент, " +
+                "удалять нечего.");
             return;
         }
         
+        // Определяем порядок
         LinkedListNode<int> first = minNode;
         LinkedListNode<int> last = maxNode;
         
@@ -171,6 +183,15 @@ internal static class Tasks
             last = minNode;
         }
         
+        // Проверяем, есть ли что удалять
+        if (first.Next == last)
+        {
+            Console.WriteLine(
+                "Между min и max нет элементов.");
+            return;
+        }
+        
+        // Удаляем элементы между first и last
         LinkedListNode<int> toDelete = first.Next;
         while (toDelete != last)
         {
@@ -190,90 +211,196 @@ internal static class Tasks
     // ==========================================
     // ЗАДАНИЕ 3: HashSet — ТВ-шоу
     // ==========================================
-    private static HashSet<string> ReadShowList(string viewerName)
+    public static void RunTask3()
     {
-        HashSet<string> shows = new HashSet<string>();
-        int count = 0;
+        Console.WriteLine(
+            "\nЗадание 3: HashSet — ТВ-шоу");
+        
+        // ШАГ 1: Задаём перечень шоу
+        // ВАЛИДАЦИЯ: должно быть хотя бы 1 шоу
+        int showCount = ConsoleHelper.ReadPositiveInt(
+            "Количество шоу в перечне: ");
+        
+        List<string> allShows = new List<string>();
         int i = 0;
         string show = "";
         
-        Console.WriteLine($"\nЗритель '{viewerName}':");
-        count = ConsoleHelper.ReadInt("Количество любимых шоу: ");
-        
-        for (i = 0; i < count; i++)
+        for (i = 0; i < showCount; i++)
         {
-            show = ConsoleHelper.ReadString($"Шоу {i + 1}: ");
-            shows.Add(show);
-        }
-        return shows;
-    }
-
-    public static void RunTask3()
-    {
-        Console.WriteLine("\nЗадание 3: HashSet — ТВ-шоу");
-        
-        int n = ConsoleHelper.ReadInt("Количество телезрителей: ");
-        
-        HashSet<string> allShows = new HashSet<string>();
-        List<HashSet<string>> viewers = new List<HashSet<string>>();
-        
-        int i = 0;
-        for (i = 0; i < n; i++)
-        {
-            HashSet<string> viewerShows = ReadShowList($"Зритель {i + 1}");
-            viewers.Add(viewerShows);
-            
-            foreach (string show in viewerShows)
+            while (true)
             {
-                allShows.Add(show);
-            }
-        }
-        
-        HashSet<string> likedByAll = new HashSet<string>();
-        HashSet<string> likedBySome = new HashSet<string>();
-        HashSet<string> likedByNone = new HashSet<string>();
-        
-        foreach (string show in allShows)
-        {
-            int count = 0;
-            for (i = 0; i < viewers.Count; i++)
-            {
-                if (viewers[i].Contains(show))
+                show = ConsoleHelper.ReadString(
+                    $"Шоу {i + 1}: ");
+                
+                // ВАЛИДАЦИЯ: проверка на дубликат
+                bool isDuplicate = false;
+                int j = 0;
+                for (j = 0; j < allShows.Count; j++)
                 {
-                    count++;
+                    if (allShows[j].ToLower() == 
+                        show.ToLower())
+                    {
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+                
+                if (isDuplicate)
+                {
+                    Console.WriteLine(
+                        "Шоу с таким названием " +
+                        "уже есть. Введите другое.");
+                }
+                else
+                {
+                    allShows.Add(show);
+                    break;
                 }
             }
-            
-            if (count == n)
+        }
+        
+        // ШАГ 2: Задаём количество зрителей
+        int viewerCount = ConsoleHelper.ReadPositiveInt(
+            "Количество телезрителей: ");
+        
+        // Счётчик лайков для каждого шоу
+        int[] likesCount = new int[showCount];
+        for (i = 0; i < showCount; i++)
+        {
+            likesCount[i] = 0;
+        }
+        
+        // ШАГ 3: Для каждого зрителя — ввод номеров
+        for (i = 0; i < viewerCount; i++)
+        {
+            Console.WriteLine(
+                $"\nЗритель {i + 1}:");
+            Console.WriteLine("Доступные шоу:");
+            int j = 0;
+            for (j = 0; j < showCount; j++)
             {
-                likedByAll.Add(show);
+                Console.WriteLine(
+                    $"  {j + 1}. {allShows[j]}");
             }
-            else if (count > 0)
+            
+            string input = ConsoleHelper.ReadString(
+                "Введите номера любимых шоу " +
+                "через пробел (или 0, " +
+                "если нет любимых): ");
+            
+            string[] parts = input.Split(' ');
+            HashSet<int> chosen = 
+                new HashSet<int>();
+            
+            for (j = 0; j < parts.Length; j++)
             {
-                likedBySome.Add(show);
+                int num = 0;
+                if (int.TryParse(parts[j], out num))
+                {
+                    if (num == 0)
+                    {
+                        // 0 означает "ничего не нравится"
+                        continue;
+                    }
+                    
+                    if (num < 1 || num > showCount)
+                    {
+                        Console.WriteLine(
+                            $"  Номер {num} вне " +
+                            $"диапазона 1-{showCount}, " +
+                            $"пропускаем.");
+                        continue;
+                    }
+                    
+                    if (chosen.Contains(num))
+                    {
+                        Console.WriteLine(
+                            $"  Номер {num} уже " +
+                            $"выбран, пропускаем.");
+                        continue;
+                    }
+                    
+                    likesCount[num - 1]++;
+                    chosen.Add(num);
+                }
+                else
+                {
+                    Console.WriteLine(
+                        $"  '{parts[j]}' — " +
+                        $"не число, пропускаем.");
+                }
+            }
+        }
+        
+        // ШАГ 4: Классификация
+        List<string> likedByAll = new List<string>();
+        List<string> likedBySome = new List<string>();
+        List<string> likedByNone = new List<string>();
+        
+        for (i = 0; i < showCount; i++)
+        {
+            if (likesCount[i] == viewerCount)
+            {
+                likedByAll.Add(allShows[i]);
+            }
+            else if (likesCount[i] > 0)
+            {
+                likedBySome.Add(allShows[i]);
             }
             else
             {
-                likedByNone.Add(show);
+                likedByNone.Add(allShows[i]);
             }
         }
         
-        Console.WriteLine("\nНравятся всем:");
-        foreach (string show in likedByAll)
+        // ШАГ 5: Вывод
+        Console.WriteLine("\n=== РЕЗУЛЬТАТЫ ===");
+        
+        Console.WriteLine(
+            $"\nНравятся ВСЕМ " +
+            $"({viewerCount} зрителям):");
+        if (likedByAll.Count == 0)
         {
-            Console.WriteLine("  - " + show);
+            Console.WriteLine("  (нет таких шоу)");
+        }
+        else
+        {
+            for (i = 0; i < likedByAll.Count; i++)
+            {
+                Console.WriteLine(
+                    $"  - {likedByAll[i]}");
+            }
         }
         
-        Console.WriteLine("\nНравятся некоторым:");
-        foreach (string show in likedBySome)
+        Console.WriteLine(
+            $"\nНравятся НЕКОТОРЫМ " +
+            $"(но не всем):");
+        if (likedBySome.Count == 0)
         {
-            Console.WriteLine("  - " + show);
+            Console.WriteLine("  (нет таких шоу)");
+        }
+        else
+        {
+            for (i = 0; i < likedBySome.Count; i++)
+            {
+                Console.WriteLine(
+                    $"  - {likedBySome[i]}");
+            }
         }
         
-        Console.WriteLine("\nНе нравятся никому:");
-        foreach (string show in likedByNone)
+        Console.WriteLine(
+            $"\nНе нравятся НИКОМУ:");
+        if (likedByNone.Count == 0)
         {
-            Console.WriteLine("  - " + show);
+            Console.WriteLine("  (нет таких шоу)");
+        }
+        else
+        {
+            for (i = 0; i < likedByNone.Count; i++)
+            {
+                Console.WriteLine(
+                    $"  - {likedByNone[i]}");
+            }
         }
     }
 
@@ -301,7 +428,8 @@ internal static class Tasks
                 writer.WriteLine(sampleTexts[i]);
             }
             int num = rnd.Next(100, 999);
-            writer.WriteLine($"Случайное число: {num}");
+            writer.WriteLine(
+                $"Случайное число: {num}");
         }
         finally
         {
@@ -311,7 +439,9 @@ internal static class Tasks
 
     public static void RunTask4()
     {
-        Console.WriteLine("\nЗадание 4: HashSet — цифры в тексте");
+        Console.WriteLine(
+            "\nЗадание 4: HashSet — " +
+            "цифры в тексте");
         
         string path = "text4.txt";
         string fullPath = Path.GetFullPath(path);
@@ -357,16 +487,24 @@ internal static class Tasks
             reader.Close();
         }
         
-        Console.WriteLine("\nВстречающиеся цифры:");
-        foreach (char c in digits)
+        Console.WriteLine(
+            "\nВстречающиеся цифры:");
+        if (digits.Count == 0)
         {
-            Console.Write(c + " ");
+            Console.WriteLine("  (цифры не найдены)");
         }
-        Console.WriteLine();
+        else
+        {
+            foreach (char c in digits)
+            {
+                Console.Write(c + " ");
+            }
+            Console.WriteLine();
+        }
     }
 
     // ==========================================
-    // ЗАДАНИЕ 5: Dictionary — самый старший (O(n))
+    // ЗАДАНИЕ 5: Dictionary — самый старший
     // ==========================================
     private struct Person
     {
@@ -378,21 +516,47 @@ internal static class Tasks
     private static DateTime ParseDate(string dateStr)
     {
         string[] parts = dateStr.Split('.');
-        int day = int.Parse(parts[0]);
-        int month = int.Parse(parts[1]);
-        int year = int.Parse(parts[2]);
+        
+        if (parts.Length != 3)
+        {
+            throw new FormatException(
+                "Формат должен быть ДД.ММ.ГГГГ");
+        }
+        
+        int day = 0;
+        int month = 0;
+        int year = 0;
+        
+        if (!int.TryParse(parts[0], out day))
+        {
+            throw new FormatException(
+                "День должен быть числом");
+        }
+        if (!int.TryParse(parts[1], out month))
+        {
+            throw new FormatException(
+                "Месяц должен быть числом");
+        }
+        if (!int.TryParse(parts[2], out year))
+        {
+            throw new FormatException(
+                "Год должен быть числом");
+        }
         
         if (day < 1 || day > 31)
         {
-            throw new FormatException("День должен быть от 01 до 31");
+            throw new FormatException(
+                "День должен быть от 01 до 31");
         }
         if (month < 1 || month > 12)
         {
-            throw new FormatException("Месяц должен быть от 01 до 12");
+            throw new FormatException(
+                "Месяц должен быть от 01 до 12");
         }
         if (year < 1800 || year > 2100)
         {
-            throw new FormatException("Год должен быть от 1800 до 2100");
+            throw new FormatException(
+                "Год должен быть от 1800 до 2100");
         }
         
         return new DateTime(year, month, day);
@@ -400,9 +564,12 @@ internal static class Tasks
 
     public static void RunTask5()
     {
-        Console.WriteLine("\nЗадание 5: Dictionary — самый старший человек");
+        Console.WriteLine(
+            "\nЗадание 5: " +
+            "Самый старший человек");
         
-        int n = ConsoleHelper.ReadInt("Количество людей: ");
+        int n = ConsoleHelper.ReadPositiveInt(
+            "Количество людей: ");
         
         DateTime oldestDate = DateTime.MaxValue;
         List<Person> oldestPeople = new List<Person>();
@@ -410,16 +577,29 @@ internal static class Tasks
         int i = 0;
         for (i = 0; i < n; i++)
         {
-            Console.WriteLine($"\nЧеловек {i + 1}:");
-            string lastName = ConsoleHelper.ReadString("Фамилия: ");
-            string firstName = ConsoleHelper.ReadString("Имя: ");
-            string dateStr = ConsoleHelper.ReadString("Дата рождения (ДД.ММ.ГГГГ): ");
+            Console.WriteLine(
+                $"\nЧеловек {i + 1}:");
             
-            DateTime birthDate = DateTime.MinValue;  // ✅ ИСПРАВЛЕНО: инициализация
+            // ВАЛИДАЦИЯ: фамилия не более 20 символов
+            string lastName = 
+                ConsoleHelper.ReadStringWithMaxLength(
+                    "Фамилия (до 20 символов): ", 20);
+            
+            // ВАЛИДАЦИЯ: имя не более 20 символов
+            string firstName = 
+                ConsoleHelper.ReadStringWithMaxLength(
+                    "Имя (до 20 символов): ", 20);
+            
+            // ВАЛИДАЦИЯ: корректный формат даты
+            string dateStr = "";
+            DateTime birthDate = DateTime.MinValue;
             bool isValid = false;
             
             while (!isValid)
             {
+                dateStr = ConsoleHelper.ReadString(
+                    "Дата рождения (ДД.ММ.ГГГГ): ");
+                
                 try
                 {
                     birthDate = ParseDate(dateStr);
@@ -427,8 +607,10 @@ internal static class Tasks
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Ошибка: " + ex.Message);
-                    dateStr = ConsoleHelper.ReadString("Повторите ввод (ДД.ММ.ГГГГ): ");
+                    Console.WriteLine(
+                        "Ошибка: " + ex.Message);
+                    Console.WriteLine(
+                        "Повторите ввод.");
                 }
             }
             
@@ -449,17 +631,25 @@ internal static class Tasks
             }
         }
         
-        Console.WriteLine($"\nСамый старший человек (дата: {oldestDate:dd.MM.yyyy}):");
+        Console.WriteLine(
+            $"\nСамый старший человек " +
+            $"(дата: {oldestDate:dd.MM.yyyy}):");
         if (oldestPeople.Count == 1)
         {
-            Console.WriteLine($"{oldestPeople[0].LastName} {oldestPeople[0].FirstName}");
+            Console.WriteLine(
+                $"{oldestPeople[0].LastName} " +
+                $"{oldestPeople[0].FirstName}");
         }
         else
         {
-            Console.WriteLine($"Количество людей с одинаковой датой: {oldestPeople.Count}");
+            Console.WriteLine(
+                $"Количество людей с одинаковой " +
+                $"датой: {oldestPeople.Count}");
             for (i = 0; i < oldestPeople.Count; i++)
             {
-                Console.WriteLine($"  {oldestPeople[i].LastName} {oldestPeople[i].FirstName}");
+                Console.WriteLine(
+                    $"  {oldestPeople[i].LastName} " +
+                    $"{oldestPeople[i].FirstName}");
             }
         }
     }

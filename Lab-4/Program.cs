@@ -12,8 +12,11 @@ internal class Program
         
         while (true)
         {
-            Console.WriteLine("\nЛабораторная работа №4. Коллекции");
-            Console.WriteLine("Выберите задание (1-5) или 0 для выхода:");
+            Console.WriteLine(
+                "\nЛабораторная работа №4. Коллекции");
+            Console.WriteLine(
+                "Выберите задание (1-5) " +
+                "или 0 для выхода:");
             Console.Write("Ваш выбор: ");
             choice = ConsoleHelper.ReadInt("");
             
@@ -28,7 +31,8 @@ internal class Program
                 case 4: Tasks.RunTask4(); break;
                 case 5: Tasks.RunTask5(); break;
                 default:
-                    Console.WriteLine("Неверный номер задания.");
+                    Console.WriteLine(
+                        "Неверный номер задания.");
                     break;
             }
         }

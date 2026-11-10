@@ -45,6 +45,50 @@ internal static class ConsoleHelper
         return result;
     }
 
+    public static int ReadIntInRange(
+        string prompt, int min, int max)
+    {
+        int result = 0;
+        bool isValid = false;
+        
+        while (!isValid)
+        {
+            result = ReadInt(prompt);
+            if (result >= min && result <= max)
+            {
+                isValid = true;
+            }
+            else
+            {
+                Console.WriteLine(
+                    $"Число должно быть " +
+                    $"от {min} до {max}.");
+            }
+        }
+        return result;
+    }
+
+    public static int ReadPositiveInt(string prompt)
+    {
+        int result = 0;
+        bool isValid = false;
+        
+        while (!isValid)
+        {
+            result = ReadInt(prompt);
+            if (result > 0)
+            {
+                isValid = true;
+            }
+            else
+            {
+                Console.WriteLine(
+                    "Число должно быть больше 0.");
+            }
+        }
+        return result;
+    }
+
     public static uint ReadUInt(string prompt)
     {
         string input = "";
@@ -82,6 +126,29 @@ internal static class ConsoleHelper
             {
                 Console.WriteLine(
                     "Строка не может быть пустой.");
+            }
+        }
+        return result;
+    }
+
+    public static string ReadStringWithMaxLength(
+        string prompt, int maxLength)
+    {
+        string result = "";
+        bool isValid = false;
+        
+        while (!isValid)
+        {
+            result = ReadString(prompt);
+            if (result.Length <= maxLength)
+            {
+                isValid = true;
+            }
+            else
+            {
+                Console.WriteLine(
+                    $"Строка не должна превышать " +
+                    $"{maxLength} символов.");
             }
         }
         return result;
