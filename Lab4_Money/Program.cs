@@ -45,7 +45,6 @@ internal class Program
         uint rubles = ConsoleHelper.ReadUInt(
             "Рубли: ");
         
-        // ВАЛИДАЦИЯ: копейки строго 0-99
         uint kopeksInput = 
             ConsoleHelper.ReadUIntInRange(
                 "Копейки (0-99): ", 0, 99);
@@ -72,7 +71,6 @@ internal class Program
         uint rubles = ConsoleHelper.ReadUInt(
             "Рубли: ");
         
-        // ВАЛИДАЦИЯ: копейки строго 0-99
         uint kopeksInput = 
             ConsoleHelper.ReadUIntInRange(
                 "Копейки (0-99): ", 0, 99);
@@ -81,30 +79,24 @@ internal class Program
         Money m1 = new Money(rubles, kopeks);
         Console.WriteLine($"m1 = {m1}");
         
-        // Тест ++
         Money m2 = m1++;
         Console.WriteLine(
             $"m1++ = {m1} " +
             $"(до инкремента было {m2})");
         
-        // Тест --
         Money m3 = m1--;
         Console.WriteLine(
             $"m1-- = {m1} " +
             $"(до декремента было {m3})");
         
-        // Тест явного приведения к uint
         uint rublesOnly = (uint)m1;
         Console.WriteLine(
             $"(uint)m1 = {rublesOnly} " +
             $"(только рубли)");
-        
-        // Тест неявного приведения к bool
         bool isNonZero = m1;
         Console.WriteLine(
             $"bool(m1) = {isNonZero}");
         
-        // Тест Money - Money
         Console.WriteLine("\nВторая сумма:");
         uint rubles2 = ConsoleHelper.ReadUInt(
             "Рубли: ");
@@ -119,7 +111,6 @@ internal class Program
         Money diff = m1 - m4;
         Console.WriteLine($"m1 - m4 = {diff}");
         
-        // Тест Money - uint
         uint subKopeks = 
             ConsoleHelper.ReadUInt(
                 "Вычесть копеек (uint): ");

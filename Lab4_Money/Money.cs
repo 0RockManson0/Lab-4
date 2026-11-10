@@ -51,8 +51,7 @@ internal class Money
         return _rubles + " руб. " + 
                _kopeks + " коп.";
     }
-
-    // ЗАДАНИЕ 6: Вычитание копеек (uint) из Money
+    
     public static Money operator -(
         Money m, uint kopeks)
     {
@@ -88,8 +87,7 @@ internal class Money
     {
         return m - kopeks;
     }
-
-    // ЗАДАНИЕ 7: Унарные операции ++ и --
+    
     public static Money operator ++(Money m)
     {
         if (m == null)
@@ -136,8 +134,7 @@ internal class Money
         }
         return result;
     }
-
-    // ЗАДАНИЕ 7: Приведение к uint (явное)
+    
     public static explicit operator uint(Money m)
     {
         if (m == null)
@@ -146,8 +143,7 @@ internal class Money
         }
         return m._rubles;
     }
-
-    // ЗАДАНИЕ 7: Приведение к bool (неявное)
+    
     public static implicit operator bool(Money m)
     {
         if (m == null)
@@ -157,8 +153,7 @@ internal class Money
         return (m._rubles != 0 || 
                 m._kopeks != 0);
     }
-
-    // ЗАДАНИЕ 7: Money - Money
+    
     public static Money operator -(
         Money m1, Money m2)
     {

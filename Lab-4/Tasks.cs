@@ -4,9 +4,6 @@ using System.IO;
 
 internal static class Tasks
 {
-    // ==========================================
-    // ЗАДАНИЕ 1: List — симметрическая разность
-    // ==========================================
     private static List<int> ReadIntList(string name)
     {
         List<int> list = new List<int>();
@@ -73,7 +70,6 @@ internal static class Tasks
         int i = 0;
         int num = 0;
         
-        // Элементы из L1, которых нет в L2
         for (i = 0; i < L1.Count; i++)
         {
             num = L1[i];
@@ -84,7 +80,6 @@ internal static class Tasks
             }
         }
         
-        // Элементы из L2, которых нет в L1
         for (i = 0; i < L2.Count; i++)
         {
             num = L2[i];
@@ -97,10 +92,7 @@ internal static class Tasks
         
         PrintList(L, "Результат L");
     }
-
-    // ==========================================
-    // ЗАДАНИЕ 2: LinkedList — удалить между min и max
-    // ==========================================
+    
     public static void RunTask2()
     {
         Console.WriteLine(
@@ -112,7 +104,6 @@ internal static class Tasks
         int i = 0;
         int num = 0;
         
-        // ВАЛИДАЦИЯ: нужно минимум 3 элемента
         count = ConsoleHelper.ReadIntInRange(
             "Количество элементов (минимум 3): ", 
             3, int.MaxValue);
@@ -131,7 +122,6 @@ internal static class Tasks
         }
         Console.WriteLine();
         
-        // Поиск min и max
         LinkedListNode<int> minNode = list.First;
         LinkedListNode<int> maxNode = list.First;
         LinkedListNode<int> current = list.First;
@@ -161,7 +151,6 @@ internal static class Tasks
             return;
         }
         
-        // Определяем порядок
         LinkedListNode<int> first = minNode;
         LinkedListNode<int> last = maxNode;
         
@@ -183,7 +172,6 @@ internal static class Tasks
             last = minNode;
         }
         
-        // Проверяем, есть ли что удалять
         if (first.Next == last)
         {
             Console.WriteLine(
@@ -191,7 +179,6 @@ internal static class Tasks
             return;
         }
         
-        // Удаляем элементы между first и last
         LinkedListNode<int> toDelete = first.Next;
         while (toDelete != last)
         {
@@ -207,17 +194,12 @@ internal static class Tasks
         }
         Console.WriteLine();
     }
-
-    // ==========================================
-    // ЗАДАНИЕ 3: HashSet — ТВ-шоу
-    // ==========================================
+    
     public static void RunTask3()
     {
         Console.WriteLine(
             "\nЗадание 3: HashSet — ТВ-шоу");
         
-        // ШАГ 1: Задаём перечень шоу
-        // ВАЛИДАЦИЯ: должно быть хотя бы 1 шоу
         int showCount = ConsoleHelper.ReadPositiveInt(
             "Количество шоу в перечне: ");
         
@@ -232,7 +214,6 @@ internal static class Tasks
                 show = ConsoleHelper.ReadString(
                     $"Шоу {i + 1}: ");
                 
-                // ВАЛИДАЦИЯ: проверка на дубликат
                 bool isDuplicate = false;
                 int j = 0;
                 for (j = 0; j < allShows.Count; j++)
@@ -259,18 +240,15 @@ internal static class Tasks
             }
         }
         
-        // ШАГ 2: Задаём количество зрителей
         int viewerCount = ConsoleHelper.ReadPositiveInt(
             "Количество телезрителей: ");
         
-        // Счётчик лайков для каждого шоу
         int[] likesCount = new int[showCount];
         for (i = 0; i < showCount; i++)
         {
             likesCount[i] = 0;
         }
         
-        // ШАГ 3: Для каждого зрителя — ввод номеров
         for (i = 0; i < viewerCount; i++)
         {
             Console.WriteLine(
@@ -299,7 +277,6 @@ internal static class Tasks
                 {
                     if (num == 0)
                     {
-                        // 0 означает "ничего не нравится"
                         continue;
                     }
                     
@@ -332,7 +309,6 @@ internal static class Tasks
             }
         }
         
-        // ШАГ 4: Классификация
         List<string> likedByAll = new List<string>();
         List<string> likedBySome = new List<string>();
         List<string> likedByNone = new List<string>();
@@ -353,7 +329,6 @@ internal static class Tasks
             }
         }
         
-        // ШАГ 5: Вывод
         Console.WriteLine("\n=== РЕЗУЛЬТАТЫ ===");
         
         Console.WriteLine(
@@ -403,10 +378,7 @@ internal static class Tasks
             }
         }
     }
-
-    // ==========================================
-    // ЗАДАНИЕ 4: HashSet — цифры в тексте
-    // ==========================================
+    
     private static int ChooseMode()
     {
         int mode = 0;
@@ -515,7 +487,6 @@ internal static class Tasks
         string fullPath = Path.GetFullPath(path);
         Console.WriteLine($"Полный путь: {fullPath}");
         
-        // Выбор режима
         int mode = ChooseMode();
         
         if (mode == 1)
@@ -531,10 +502,8 @@ internal static class Tasks
                 "Файл заполнен вручную.");
         }
         
-        // Вывод содержимого
         PrintFileContent(path);
         
-        // Поиск цифр
         HashSet<char> digits = new HashSet<char>();
         int i = 0;
         string line = "";
@@ -573,9 +542,6 @@ internal static class Tasks
             Console.WriteLine();
         }
     }
-    // ==========================================
-    // ЗАДАНИЕ 5: Dictionary — самый старший
-    // ==========================================
     private struct Person
     {
         public string LastName;
@@ -650,17 +616,14 @@ internal static class Tasks
             Console.WriteLine(
                 $"\nЧеловек {i + 1}:");
             
-            // ВАЛИДАЦИЯ: фамилия не более 20 символов
             string lastName = 
                 ConsoleHelper.ReadStringWithMaxLength(
                     "Фамилия (до 20 символов): ", 20);
             
-            // ВАЛИДАЦИЯ: имя не более 20 символов
             string firstName = 
                 ConsoleHelper.ReadStringWithMaxLength(
                     "Имя (до 20 символов): ", 20);
             
-            // ВАЛИДАЦИЯ: корректный формат даты
             string dateStr = "";
             DateTime birthDate = DateTime.MinValue;
             bool isValid = false;
