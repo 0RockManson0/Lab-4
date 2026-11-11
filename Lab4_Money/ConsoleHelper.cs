@@ -2,111 +2,78 @@
 
 internal static class ConsoleHelper
 {
-    private static bool IsEmpty(string s)
+    public static int ReadInt(string message)
     {
-        bool isEmpty = true;
-        int i = 0;
-        
-        if (s == null)
-        {
-            return true;
-        }
-        
-        for (i = 0; i < s.Length; i++)
-        {
-            if (!char.IsWhiteSpace(s[i]))
-            {
-                isEmpty = false;
-                break;
-            }
-        }
-        return isEmpty;
-    }
-
-    public static int ReadInt(string prompt)
-    {
-        string input = "";
-        int result = 0;
+        int value = 0;
         bool isValid = false;
-        
+
         while (!isValid)
         {
-            Console.Write(prompt);
-            input = Console.ReadLine();
-            isValid = int.TryParse(input, out result);
-            
-            if (!isValid)
+            Console.Write(message);
+            string input = Console.ReadLine() ?? "";
+
+            if (int.TryParse(input, out value))
             {
-                Console.WriteLine(
-                    "Некорректный ввод. " +
-                    "Введите целое число.");
+                isValid = true;
+            }
+            else
+            {
+                Console.WriteLine("Введите целое число.");
             }
         }
-        return result;
+
+        return value;
     }
 
-    public static uint ReadUInt(string prompt)
+    public static uint ReadUInt(string message)
     {
-        string input = "";
-        uint result = 0;
+        uint value = 0;
         bool isValid = false;
-        
-        while (!isValid)
-        {
-            Console.Write(prompt);
-            input = Console.ReadLine();
-            isValid = uint.TryParse(input, out result);
-            
-            if (!isValid)
-            {
-                Console.WriteLine(
-                    "Некорректный ввод. " +
-                    "Введите целое неотрицательное число.");
-            }
-        }
-        return result;
-    }
 
-    public static uint ReadUIntInRange(
-        string prompt, uint min, uint max)
-    {
-        uint result = 0;
-        bool isValid = false;
-        
         while (!isValid)
         {
-            result = ReadUInt(prompt);
-            if (result >= min && result <= max)
+            Console.Write(message);
+            string input = Console.ReadLine() ?? "";
+
+            if (uint.TryParse(input, out value))
             {
                 isValid = true;
             }
             else
             {
                 Console.WriteLine(
-                    $"Число должно быть " +
-                    $"от {min} до {max}.");
+                    "Введите целое неотрицательное число.");
             }
         }
-        return result;
+
+        return value;
     }
 
-    public static string ReadString(string prompt)
+    public static byte ReadKopeks(string message)
     {
-        string result = "";
-        bool isValid = false;
-        
-        while (!isValid)
+        uint value = 0;
+
+        while (true)
         {
-            Console.Write(prompt);
-            result = Console.ReadLine();
-            isValid = !IsEmpty(result);
-            
-            if (!isValid)
+            value = ReadUInt(message);
+
+            if (value <= 99)
             {
-                Console.WriteLine(
-                    "Строка не может быть пустой.");
+                return (byte)value;
             }
+
+            Console.WriteLine(
+                "Количество копеек должно быть от 0 до 99.");
         }
-        return result;
+    }
+
+    public static Money ReadMoney(string title)
+    {
+        Console.WriteLine("\n" + title);
+
+        uint rubles = ReadUInt("Рубли: ");
+        byte kopeks = ReadKopeks("Копейки (0-99): ");
+
+        return new Money(rubles, kopeks);
     }
 }

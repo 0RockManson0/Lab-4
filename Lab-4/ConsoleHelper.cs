@@ -1,156 +1,128 @@
 ﻿using System;
+using System.Globalization;
 
 internal static class ConsoleHelper
 {
-    private static bool IsEmpty(string s)
+    public static int ReadInt(string message)
     {
-        bool isEmpty = true;
-        int i = 0;
-        
-        if (s == null)
-        {
-            return true;
-        }
-        
-        for (i = 0; i < s.Length; i++)
-        {
-            if (!char.IsWhiteSpace(s[i]))
-            {
-                isEmpty = false;
-                break;
-            }
-        }
-        return isEmpty;
-    }
-
-    public static int ReadInt(string prompt)
-    {
-        string input = "";
-        int result = 0;
+        int value = 0;
         bool isValid = false;
-        
+
         while (!isValid)
         {
-            Console.Write(prompt);
-            input = Console.ReadLine();
-            isValid = int.TryParse(input, out result);
-            
-            if (!isValid)
-            {
-                Console.WriteLine(
-                    "Некорректный ввод. " +
-                    "Введите целое число.");
-            }
-        }
-        return result;
-    }
+            Console.Write(message);
+            string input = Console.ReadLine() ?? "";
 
-    public static int ReadIntInRange(
-        string prompt, int min, int max)
-    {
-        int result = 0;
-        bool isValid = false;
-        
-        while (!isValid)
-        {
-            result = ReadInt(prompt);
-            if (result >= min && result <= max)
+            if (int.TryParse(input, out value))
             {
                 isValid = true;
             }
             else
             {
-                Console.WriteLine(
-                    $"Число должно быть " +
-                    $"от {min} до {max}.");
+                Console.WriteLine("Ошибка. Введите целое число.");
             }
         }
-        return result;
+
+        return value;
     }
 
-    public static int ReadPositiveInt(string prompt)
+    public static int ReadPositiveInt(string message)
     {
-        int result = 0;
+        int value = 0;
         bool isValid = false;
-        
+
         while (!isValid)
         {
-            result = ReadInt(prompt);
-            if (result > 0)
+            value = ReadInt(message);
+
+            if (value > 0)
             {
                 isValid = true;
             }
             else
             {
-                Console.WriteLine(
-                    "Число должно быть больше 0.");
+                Console.WriteLine("Число должно быть больше нуля.");
             }
         }
-        return result;
+
+        return value;
     }
 
-    public static uint ReadUInt(string prompt)
+    public static string ReadString(string message)
     {
-        string input = "";
-        uint result = 0;
-        bool isValid = false;
-        
-        while (!isValid)
+        string value = "";
+
+        while (value.Length == 0)
         {
-            Console.Write(prompt);
-            input = Console.ReadLine();
-            isValid = uint.TryParse(input, out result);
-            
-            if (!isValid)
+            Console.Write(message);
+            value = (Console.ReadLine() ?? "").Trim();
+
+            if (value.Length == 0)
             {
-                Console.WriteLine(
-                    "Некорректный ввод. " +
-                    "Введите целое неотрицательное число.");
+                Console.WriteLine("Строка не должна быть пустой.");
             }
         }
-        return result;
+
+        return value;
     }
 
-    public static string ReadString(string prompt)
+    public static string ReadStringMaxLength(
+        string message, int maxLength)
     {
-        string result = "";
-        bool isValid = false;
-        
-        while (!isValid)
+        string value = "";
+
+        while (value.Length == 0 || value.Length > maxLength)
         {
-            Console.Write(prompt);
-            result = Console.ReadLine();
-            isValid = !IsEmpty(result);
-            
-            if (!isValid)
+            Console.Write(message);
+            value = (Console.ReadLine() ?? "").Trim();
+
+            if (value.Length == 0)
+            {
+                Console.WriteLine("Строка не должна быть пустой.");
+            }
+            else if (value.Length > maxLength)
             {
                 Console.WriteLine(
-                    "Строка не может быть пустой.");
+                    "Максимальная длина — " + maxLength + " символов.");
             }
         }
-        return result;
+
+        return value;
     }
 
-    public static string ReadStringWithMaxLength(
-        string prompt, int maxLength)
+    public static DateTime ReadBirthDate(string message)
     {
-        string result = "";
+        DateTime date = DateTime.MinValue;
         bool isValid = false;
-        
+
         while (!isValid)
         {
-            result = ReadString(prompt);
-            if (result.Length <= maxLength)
+            Console.Write(message);
+            string input = Console.ReadLine() ?? "";
+
+            if (DateTime.TryParseExact(
+                input,
+                "dd.MM.yyyy",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out date))
             {
-                isValid = true;
+                if (date.Year >= 1800 && date.Year <= 2100)
+                {
+                    isValid = true;
+                }
+                else
+                {
+                    Console.WriteLine("Год должен быть от 1800 до 2100.");
+                }
             }
             else
             {
                 Console.WriteLine(
-                    $"Строка не должна превышать " +
-                    $"{maxLength} символов.");
+                    "Неверная дата. Используйте формат ДД.ММ.ГГГГ.");
             }
         }
-        return result;
+
+        return date;
     }
 }

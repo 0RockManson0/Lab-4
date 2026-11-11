@@ -3,119 +3,180 @@ using System.Text;
 
 internal class Program
 {
-    private static void Main(string[] args)
+    private static void Main()
     {
         Console.OutputEncoding = Encoding.UTF8;
         Console.InputEncoding = Encoding.UTF8;
-        
+
         int choice = 0;
-        
+
         while (true)
         {
-            Console.WriteLine(
-                "\nЛабораторная работа №4. " +
-                "Перегрузка операций (Money)");
-            Console.WriteLine(
-                "Выберите задание (6-7) " +
-                "или 0 для выхода:");
-            Console.Write("Ваш выбор: ");
-            choice = ConsoleHelper.ReadInt("");
-            
+            Console.WriteLine("\nЛабораторная работа №4. Money");
+            Console.WriteLine("6 — Проверка класса Money");
+            Console.WriteLine("7 — Проверка перегруженных операторов");
+            Console.WriteLine("0 — Выход");
+
+            choice = ConsoleHelper.ReadInt("Ваш выбор: ");
+
             switch (choice)
             {
                 case 0:
-                    Console.WriteLine("Выход.");
                     return;
-                case 6: RunTask6(); break;
-                case 7: RunTask7(); break;
+                case 6:
+                    RunTask6();
+                    break;
+                case 7:
+                    RunTask7();
+                    break;
                 default:
-                    Console.WriteLine(
-                        "Неверный номер задания.");
+                    Console.WriteLine("Такого задания нет.");
                     break;
             }
         }
     }
 
+    // =========================
+    // ЗАДАНИЕ 6
+    // =========================
+
     private static void RunTask6()
     {
         Console.WriteLine(
-            "\nЗадание 6: " +
-            "Вычитание копеек из Money");
-        
-        uint rubles = ConsoleHelper.ReadUInt(
-            "Рубли: ");
-        
-        uint kopeksInput = 
-            ConsoleHelper.ReadUIntInRange(
-                "Копейки (0-99): ", 0, 99);
-        byte kopeks = (byte)kopeksInput;
-        
-        Money m = new Money(rubles, kopeks);
+            "\nЗадание 6. Класс Money и добавление копеек");
+
+        // Проверка конструктора без параметров.
+
+        Money empty = new Money();
+
         Console.WriteLine(
-            $"Исходная сумма: {m}");
-        
-        uint subtractKopeks = 
-            ConsoleHelper.ReadUInt(
-                "Сколько копеек вычесть: ");
-        Money result = m - subtractKopeks;
+            "Конструктор без параметров: " + empty);
+
+        // Проверка конструктора с параметрами.
+
+        Money original = ConsoleHelper.ReadMoney(
+            "Введите исходную сумму");
+
         Console.WriteLine(
-            $"Результат: {result}");
+            "Исходная сумма: " + original);
+
+        // Проверка конструктора копирования.
+
+        Money copy = new Money(original);
+
+        Console.WriteLine(
+            "Копия объекта: " + copy);
+
+        // Проверка свойств.
+
+        Console.WriteLine(
+            "\nКоличество рублей: " + original.Rubles);
+
+        Console.WriteLine(
+            "Количество копеек: " + original.Kopeks);
+
+        // Проверка изменения свойств.
+
+        uint newRubles = ConsoleHelper.ReadUInt(
+            "\nВведите новое количество рублей: ");
+
+        byte newKopeks = ConsoleHelper.ReadKopeks(
+            "Введите новое количество копеек: ");
+
+        original.Rubles = newRubles;
+        original.Kopeks = newKopeks;
+
+        Console.WriteLine(
+            "Сумма после изменения свойств: " + original);
+
+        // Проверка метода AddKopeks.
+
+        uint additionalKopeks = ConsoleHelper.ReadUInt(
+            "\nСколько копеек добавить: ");
+
+        Money result = original.AddKopeks(additionalKopeks);
+
+        Console.WriteLine(
+            "Результат добавления: " + result);
+
+        Console.WriteLine(
+            "Исходный объект после вызова метода: " + original);
     }
+
+    // =========================
+    // ЗАДАНИЕ 7
+    // =========================
 
     private static void RunTask7()
     {
         Console.WriteLine(
-            "\nЗадание 7: " +
-            "Все операции Money");
-        
-        uint rubles = ConsoleHelper.ReadUInt(
-            "Рубли: ");
-        
-        uint kopeksInput = 
-            ConsoleHelper.ReadUIntInRange(
-                "Копейки (0-99): ", 0, 99);
-        byte kopeks = (byte)kopeksInput;
-        
-        Money m1 = new Money(rubles, kopeks);
-        Console.WriteLine($"m1 = {m1}");
-        
-        Money m2 = m1++;
+            "\nЗадание 7. Перегрузка операторов Money");
+
+        Money first = ConsoleHelper.ReadMoney(
+            "Введите первую сумму");
+
+        Console.WriteLine("Первая сумма: " + first);
+
+        // Проверка ++.
+
+        Money incremented = first;
+
+        incremented++;
+
         Console.WriteLine(
-            $"m1++ = {m1} " +
-            $"(до инкремента было {m2})");
-        
-        Money m3 = m1--;
+            "После ++: " + incremented);
+
+        // Проверка --.
+
+        Money decremented = first;
+
+        decremented--;
+
         Console.WriteLine(
-            $"m1-- = {m1} " +
-            $"(до декремента было {m3})");
-        
-        uint rublesOnly = (uint)m1;
+            "После --: " + decremented);
+
+        // Проверка явного преобразования uint.
+
+        uint rubles = (uint)first;
+
         Console.WriteLine(
-            $"(uint)m1 = {rublesOnly} " +
-            $"(только рубли)");
-        bool isNonZero = m1;
+            "Явное преобразование в uint: " + rubles);
+
+        // Проверка неявного преобразования bool.
+
+        bool isNotZero = first;
+
         Console.WriteLine(
-            $"bool(m1) = {isNonZero}");
-        
-        Console.WriteLine("\nВторая сумма:");
-        uint rubles2 = ConsoleHelper.ReadUInt(
-            "Рубли: ");
-        uint kopeksInput2 = 
-            ConsoleHelper.ReadUIntInRange(
-                "Копейки (0-99): ", 0, 99);
-        byte kopeks2 = (byte)kopeksInput2;
-        
-        Money m4 = new Money(rubles2, kopeks2);
-        Console.WriteLine($"m4 = {m4}");
-        
-        Money diff = m1 - m4;
-        Console.WriteLine($"m1 - m4 = {diff}");
-        
-        uint subKopeks = 
-            ConsoleHelper.ReadUInt(
-                "Вычесть копеек (uint): ");
-        Money diff2 = m1 - subKopeks;
+            "Неявное преобразование в bool: " + isNotZero);
+
+        // Проверка Money - uint.
+
+        uint kopeks = ConsoleHelper.ReadUInt(
+            "\nСколько копеек вычесть из первой суммы: ");
+
+        Money result1 = first - kopeks;
+
         Console.WriteLine(
-            $"m1 - {subKopeks} коп. = {diff2}");
+            "Money - uint: " + result1);
+
+        // Проверка uint - Money.
+
+        uint startingKopeks = ConsoleHelper.ReadUInt(
+            "\nВведите количество копеек для операции uint - Money: ");
+
+        Money result2 = startingKopeks - first;
+
+        Console.WriteLine(
+            "uint - Money: " + result2);
+
+        // Проверка Money - Money.
+
+        Money second = ConsoleHelper.ReadMoney(
+            "\nВведите вторую сумму");
+
+        Money result3 = first - second;
+
+        Console.WriteLine(
+            "Money - Money: " + result3);
     }
 }
