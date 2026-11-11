@@ -114,7 +114,10 @@
 
 ### Тестирование
 <p align="center">
-<img src="images/lab4_task5.png" width="600" alt="Тестирование задания 5">
+<img src="images/lab4_task5_1.png" width="600" alt="Тестирование задания 5">
+</p>
+<p align="center">
+<img src="images/lab4_task5_2.png" width="600" alt="Тестирование задания 5">
 </p>
 
 ---
