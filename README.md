@@ -56,7 +56,15 @@
 </p>
 
 <p align="center">
-<img src="images/lab4_task1_2.png" width="600" alt="Задание 1: строки">
+<img src="images/lab4_task1_2.png" width="600" alt="Задание 1: вещественные числа">
+</p>
+
+<p align="center">
+<img src="images/lab4_task1_3.png" width="600" alt="Задание 1: символы">
+</p>
+
+<p align="center">
+<img src="images/lab4_task1_4.png" width="600" alt="Задание 1: строки">
 </p>
 
 ---
@@ -141,10 +149,6 @@
 
 <p align="center">
 <img src="images/lab4_task4_1.png" width="600" alt="Задание 4: случайная генерация">
-</p>
-
-<p align="center">
-<img src="images/lab4_task4_2.png" width="600" alt="Задание 4: ручной ввод">
 </p>
 
 ---
