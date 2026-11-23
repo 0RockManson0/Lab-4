@@ -5,7 +5,6 @@ internal class Money
     private uint _rubles;
     private byte _kopeks;
 
-    // Свойство для рублей.
 
     public uint Rubles
     {
@@ -13,15 +12,13 @@ internal class Money
         {
             return _rubles;
         }
+
         set
         {
             _rubles = value;
         }
     }
 
-    // Свойство для копеек.
-    // Если передать значение больше 99,
-    // лишние копейки переводятся в рубли.
 
     public byte Kopeks
     {
@@ -29,14 +26,23 @@ internal class Money
         {
             return _kopeks;
         }
+
         set
         {
-            _rubles += (uint)(value / 100);
+            ulong totalRubles =
+                (ulong)_rubles + (uint)(value / 100);
+            if (totalRubles > uint.MaxValue)
+            {
+                throw new OverflowException(
+                    "Сумма превышает " +
+                    "допустимое значение.");
+            }
+
+            _rubles = (uint)totalRubles;
             _kopeks = (byte)(value % 100);
         }
     }
 
-    // Конструктор без параметров.
 
     public Money()
     {
@@ -44,7 +50,6 @@ internal class Money
         _kopeks = 0;
     }
 
-    // Конструктор с параметрами.
 
     public Money(uint rubles, byte kopeks)
     {
@@ -53,7 +58,6 @@ internal class Money
         Kopeks = kopeks;
     }
 
-    // Конструктор копирования.
 
     public Money(Money other)
     {
@@ -68,16 +72,12 @@ internal class Money
             _kopeks = other._kopeks;
         }
     }
-
-    // Перевод суммы в копейки.
-
+    
     private ulong ToTotalKopeks()
     {
         return (ulong)_rubles * 100 + _kopeks;
     }
-
-    // Создание Money из общего количества копеек.
-
+    
     private static Money FromTotalKopeks(ulong total)
     {
         ulong rubles = total / 100;
@@ -92,32 +92,31 @@ internal class Money
         return new Money((uint)rubles, kopeks);
     }
 
-    // Метод задания 6.
-    // Добавляет указанное количество копеек.
-    // Исходный объект не изменяется.
+    // МЕТОД ЗАДАНИЯ 6 
 
-    public Money AddKopeks(uint kopeks)
+    public Money SubtractKopeks(uint kopeks)
     {
         ulong total = ToTotalKopeks();
 
-        total += kopeks;
+        if (kopeks > total)
+        {
+            Console.WriteLine(
+                "Ошибка: сумма не может быть " +
+                "отрицательной.");
+            return new Money();
+        }
 
-        return FromTotalKopeks(total);
+        return FromTotalKopeks(total - kopeks);
     }
 
-    // Переопределение ToString.
 
     public override string ToString()
     {
-        return _rubles + " руб. " +
-               _kopeks + " коп.";
+        return _rubles + " руб. " + _kopeks + " коп.";
     }
 
-    // =========================
-    // ОПЕРАТОРЫ ЗАДАНИЯ 7
-    // =========================
 
-    // ++ добавляет одну копейку.
+    // ОПЕРАТОРЫ ЗАДАНИЯ 7
 
     public static Money operator ++(Money money)
     {
@@ -126,15 +125,10 @@ internal class Money
             return new Money(0, 1);
         }
 
-        ulong total = money.ToTotalKopeks();
-
-        total++;
-
-        return FromTotalKopeks(total);
+        return FromTotalKopeks(
+            money.ToTotalKopeks() + 1);
     }
-
-    // -- вычитает одну копейку.
-
+    
     public static Money operator --(Money money)
     {
         if (money == null)
@@ -142,24 +136,9 @@ internal class Money
             return new Money();
         }
 
-        ulong total = money.ToTotalKopeks();
-
-        if (total == 0)
-        {
-            Console.WriteLine(
-                "Ошибка: сумма не может быть отрицательной.");
-
-            return new Money(money);
-        }
-
-        total--;
-
-        return FromTotalKopeks(total);
+        return money.SubtractKopeks(1);
     }
 
-    // Явное преобразование в uint.
-    // Возвращается количество рублей,
-    // копейки отбрасываются.
 
     public static explicit operator uint(Money money)
     {
@@ -171,9 +150,6 @@ internal class Money
         return money._rubles;
     }
 
-    // Неявное преобразование в bool.
-    // Если сумма не равна нулю, возвращается true.
-
     public static implicit operator bool(Money money)
     {
         if (money == null)
@@ -183,10 +159,7 @@ internal class Money
 
         return money._rubles != 0 || money._kopeks != 0;
     }
-
-    // Money - uint.
-    // Число обозначает количество копеек.
-
+    
     public static Money operator -(
         Money money, uint kopeks)
     {
@@ -195,24 +168,9 @@ internal class Money
             return new Money();
         }
 
-        ulong total = money.ToTotalKopeks();
-
-        if (kopeks > total)
-        {
-            Console.WriteLine(
-                "Ошибка: сумма не может быть отрицательной.");
-
-            return new Money();
-        }
-
-        total -= kopeks;
-
-        return FromTotalKopeks(total);
+        return money.SubtractKopeks(kopeks);
     }
-
-    // uint - Money.
-    // Левый операнд также обозначает копейки.
-
+    
     public static Money operator -(
         uint kopeks, Money money)
     {
@@ -227,16 +185,14 @@ internal class Money
         if (totalMoney > totalKopeks)
         {
             Console.WriteLine(
-                "Ошибка: результат не может быть отрицательным.");
-
+                "Ошибка: результат не может быть " +
+                "отрицательным.");
             return new Money();
         }
 
         return FromTotalKopeks(totalKopeks - totalMoney);
     }
-
-    // Money - Money.
-
+    
     public static Money operator -(
         Money first, Money second)
     {
@@ -251,8 +207,8 @@ internal class Money
         if (secondTotal > firstTotal)
         {
             Console.WriteLine(
-                "Ошибка: сумма не может быть отрицательной.");
-
+                "Ошибка: сумма не может быть " +
+                "отрицательной.");
             return new Money();
         }
 
